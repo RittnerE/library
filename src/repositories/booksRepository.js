@@ -18,12 +18,114 @@ async function getBooksByName(title) {
   }
 }
 
+async function getAppointmentByTreatment(title) {
+  let conn;
+  try {
+    conn = await getConnection();
+    const book = await conn.query(
+        'SELECT appointment.time AS time, treatment.name AS treatment FROM treatment LEFT JOIN appointment ON treatment.id = appointment.treatment WHERE treatment.name = ? AND appointment.patient is null',
+        [title]
+    );
+
+    return book;
+
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) conn.close(); //release to pool
+  }
+}
+
+async function listTreatments() {
+  let conn;
+  try {
+    conn = await getConnection();
+    const book = await conn.query(
+        'SELECT * from treatment'
+    );
+
+    return book;
+
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) conn.close(); //release to pool
+  }
+}
+
 async function addBook(title, libraryId) {
   let conn;
   try {
 
     conn = await getConnection();
-    const book = await conn.query('INSERT INTO books (title, library_id) VALUES (?, ?)', [title, libraryId]);
+    const book = await conn.query('INSERT INTO treatment (id, name) VALUES (?, ?)', [libraryId,title]);
+
+    return book;
+
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) conn.close(); //release to pool
+  }
+}
+async function addPatient(name, email) {
+  let conn;
+  try {
+
+    conn = await getConnection();
+    const book = await conn.query('INSERT INTO patient ( name, email) VALUES (?, ?)', [name,email]);
+
+    return book;
+
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) conn.close(); //release to pool
+  }
+}
+
+async function bookAppointment(time, id) {
+  let conn;
+  try {
+
+    conn = await getConnection();
+    const book = await conn.query('UPDATE appointment set patient = (?) WHERE time = (?) ', [id,time]);
+
+    return book;
+
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) conn.close(); //release to pool
+  }
+}
+
+async function appointmentDone(time) {
+  let conn;
+  try {
+
+    conn = await getConnection();
+    const book = await conn.query('UPDATE appointment set done = 1 WHERE time = (?) ', [time]);
+
+    return book;
+
+  } catch (err) {
+    throw err;
+  } finally {
+    if (conn) conn.close(); //release to pool
+  }
+}
+
+
+
+async function deleteTreatments(id) {
+  let conn;
+  try {
+    conn = await getConnection();
+    const book = await conn.query(
+        'DELETE from treatment WHERE treatment.id = ?',
+        [id]
+    );
 
     return book;
 
@@ -37,4 +139,10 @@ async function addBook(title, libraryId) {
 module.exports = {
   getBooksByName,
   addBook,
+  listTreatments,
+  deleteTreatments,
+  addPatient,
+  getAppointmentByTreatment,
+  bookAppointment,
+  appointmentDone
 };
