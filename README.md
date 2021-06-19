@@ -1,5 +1,5 @@
 # libraryDB
-DB system for searching books in libraries.
+DB system for appointment managment
 
 ## Usage
 
