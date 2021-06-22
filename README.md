@@ -30,3 +30,16 @@ DB system for appointment managment
 ### mark appointment as done
 
     $ node src/index.js appointment-done "<time>"   
+
+### add appointment 
+
+    $ node src/index.js add-appointment "<patientId>" "<appointmentId>" "<treatmentId>"
+
+### delete appointment 
+
+    $ node src/index.js delete-appointment "<appointmentId>"
+
+### list appointment 
+
+    $ node src/index.js list-appointments
+

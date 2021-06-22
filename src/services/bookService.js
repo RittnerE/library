@@ -1,6 +1,6 @@
 const randomWords = require('random-words');
 
-const { getBooksByName, addBook, listTreatments,deleteTreatments,addPatient,getAppointmentByTreatment, bookAppointment, appointmentDone} = require("../repositories/booksRepository");
+const { getBooksByName,addAppointment ,addBook, listTreatments, listAppointments,deleteTreatments,addPatient,getAppointmentByTreatment, bookAppointment, appointmentDone, deleteAppointment} = require("../repositories/booksRepository");
 
 async function searchBooksByTitle(title) {
   const books = await getBooksByName(title);
@@ -42,6 +42,24 @@ async function listTreatmentsByTitle() {
   delete books.meta;
   return books;
 }
+async function listAppointmentsByDate() {
+  const books = await listAppointments();
+
+  delete books.meta;
+  return books;
+}
+async function addAppointmentService(patientName, appointmentDate, appointmentId, treatmentId) {
+  const books = await addAppointment(patientName, appointmentDate, appointmentId, treatmentId);
+
+  delete books.meta;
+  return books;
+}
+async function deleteAppointmentService(id) {
+  const books = await deleteAppointment(id);
+
+  delete books.meta;
+  return books;
+}
 
 async function addBookService(title, libraryId) {
   const book = await addBook(title, libraryId);
@@ -74,5 +92,8 @@ module.exports = {
   addPatientService,
   searchAppointmentByTreatment,
   bookAppointmentByTime,
-  setAppointmentDone
+  setAppointmentDone,
+  addAppointmentService,
+  deleteAppointmentService,
+  listAppointmentsByDate
 };
